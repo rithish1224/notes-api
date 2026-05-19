@@ -1,46 +1,35 @@
 import { Router } from "express";
 import notes from "../data/dummy.js"
+import pool from "../db.js";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    const page = Number(req.query.page);
-    const limit = Number(req.query.limit);
-    
-    const sIndex = (page-1)*limit;
-    const eIndex = sIndex + limit;
+router.get("/",async (req, res) => {
 
-    const note = notes.slice(sIndex,eIndex);
-
-    res.json(note)
+    const note = await pool.query("SELECT * FROM notes;")
+    res.json(note.rows)
 });
 
-router.post("/",(req,res) => {
+router.post("/",async (req,res) => {
     
-    const id = notes.length+1;
+    const user_id = req.body.user_id;
     const title = req.body.title;
     const content = req.body.content;
-    const tags = req.body.tags;
-    const date = new Date().toLocaleDateString('en-US');
 
-    const newNote = {id,title,content,tags,createdAt:date}
 
-    notes.push(newNote);
+    const result = await pool.query("INSERT INTO notes(title,content,user_id) VALUES ($1,$2,$3) RETURNING *",  [title, content, user_id]) 
 
     res.status(201).json({
-        message: "Note created successfully",
-        note: newNote
-    });
+    message: "Note created successfully",
+    note: result.rows
+});
 })
 
-router.get("/search",(req,res) => {
+router.get("/search",async (req,res) => {
     const title = req.query.title
 
-    const matchedNotes = notes.filter((note) => 
-        note.title.toLowerCase().includes(title.toLowerCase())
-    )
-
-    if(matchedNotes.length === 0){
+    const result = await pool.query("SELECT * FROM notes WHERE title LIKE $1",[`%${title}%`])
+    if(result.rows.length === 0){
         return res.status(404).json(
             {
                 message : "note not found"
@@ -48,70 +37,55 @@ router.get("/search",(req,res) => {
         )
     }
 
-    res.json(matchedNotes)
+    res.json(result.rows)
 })
 
-router.get("/:id",(req,res) => {
+router.get("/:id",async (req,res) => {
     const id = Number(req.params.id);
-    const note = notes.find((note) => 
-        note.id === id
-    )
+    
+    const result = await pool.query("SELECT * FROM notes WHERE id = $1",[id]);
 
-    console.log(req.params.id);
-    console.log(id);
-    console.log(notes);
-
-    if(!note){
+    if(result.rows.length === 0){
         return res.status(404).json({
         message: "Note not found",
     });
     }
 
-    
-
-    res.json(note)
+    res.json(result.rows[0])
 })
 
-router.put("/:id",(req,res) => {
+router.put("/:id",async (req,res) => {
     const id = Number(req.params.id);
-    const note = notes.find((note) => 
-        note.id === id
-    )
+    const title = req.body.title;
+    const content = req.body.content;
+    
+    const result = await pool.query("UPDATE notes SET title=$1,content=$2 WHERE id=$3 RETURNING * ",[title,content,id]);
 
-    if (!note) {
+    if (result.rows.length === 0) {
         return res.status(404).json({
             message: "Note not found"
         });
     }
 
-    const date = new Date().toLocaleDateString('en-US');
-
-    note.title = req.body.title;
-    note.content = req.body.content;
-    note.tags = req.body.tags;
-    note.createdAt = date;
-
     res.json({
     message: "Note updated successfully",
-    note
+    note : result.rows[0]
 });
 
 })
 
-router.delete("/:id",(req,res) => {
+router.delete("/:id",async (req,res) => {
     const id = Number(req.params.id);
-    const index = notes.findIndex((note) => 
-        note.id === id
-    )
     
-    if(index === -1){
-         return res.status(404).json({
-            message: "Note not found"
-        });
-    }
-    
-    notes.splice(index,1)
+    const result = await pool.query("DELETE FROM notes WHERE id = $1 RETURNING *",[id])
 
+    console.log(result.rows);
+
+    if(result.rows.length === 0){
+        res.status(404).json({
+            message : "Note not found",
+        })
+    }
     res.json("note deleted successfully")
 })
 
