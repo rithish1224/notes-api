@@ -1,5 +1,6 @@
 import express from "express"
 import notesRouter from "./routes/notes.js"
+import authRouter from "./routes/auth.js"
 import pool from "./db.js";
 
 const app = express();
@@ -18,6 +19,7 @@ pool.query("SELECT NOW()", (err, result) => {
 });
 
 app.use("/notes",notesRouter);
+app.use("/auth",authRouter);
 
 app.get("/",(req,res) => {
     res.send("Hello World!!")

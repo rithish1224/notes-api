@@ -1,5 +1,4 @@
 import { Router } from "express";
-import notes from "../data/dummy.js"
 import pool from "../db.js";
 
 const router = Router();
