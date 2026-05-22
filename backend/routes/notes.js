@@ -3,9 +3,9 @@ import pool from "../db.js";
 
 const router = Router();
 
-router.get("/",async (req, res) => {
-
-    const note = await pool.query("SELECT * FROM notes;")
+router.get("/:user_id",async (req, res) => {
+    const user_id = req.params.user_id
+    const note = await pool.query("SELECT * FROM notes where user_id = $1;",[user_id])
     res.json(note.rows)
 });
 

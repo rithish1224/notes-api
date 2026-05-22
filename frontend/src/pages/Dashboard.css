@@ -1,0 +1,355 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Work+Sans:wght@400;500;600&display=swap");
+
+.dashboard-page {
+  min-height: 100vh;
+  background-color: #f7f4ee;
+  color: #2d2924;
+  font-family: "Work Sans", "Noto Sans", sans-serif;
+}
+
+.dashboard-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background-color: #fdfcf9;
+  border-bottom: 1px solid #e6dfd5;
+  box-shadow: 0 6px 12px rgba(28, 23, 16, 0.05);
+  z-index: 10;
+}
+
+.dashboard-logo {
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.dashboard-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: #4a433b;
+}
+
+.dashboard-logout {
+  border: 1px solid #d8d1c7;
+  border-radius: 10px;
+  background-color: #fffdf8;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3b342b;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.dashboard-logout:hover {
+  background-color: #f2ede4;
+  border-color: #cfc6b8;
+}
+
+.dashboard-content {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 96px 24px 48px;
+  display: grid;
+  gap: 28px;
+}
+
+.dashboard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.dashboard-title {
+  margin: 0 0 6px;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.dashboard-subtitle {
+  margin: 0;
+  color: #6c6359;
+  font-size: 1rem;
+}
+
+.add-note-button {
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: none;
+  background-color: #3b342b;
+  color: #f9f6f0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  box-shadow: 0 10px 18px rgba(40, 34, 26, 0.12);
+}
+
+.add-note-button:hover {
+  background-color: #4a4238;
+  transform: translateY(-1px);
+}
+
+.note-editor {
+  background-color: #fff7dd;
+  border: 1px solid #e7d9b7;
+  border-radius: 18px;
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+  box-shadow: 0 16px 28px rgba(34, 28, 20, 0.12);
+}
+
+.note-editor-header h2 {
+  margin: 0 0 4px;
+  font-size: 1.2rem;
+}
+
+.note-editor-header p {
+  margin: 0;
+  color: #6a5f52;
+  font-size: 0.95rem;
+}
+
+.note-editor input,
+.note-editor textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #d8cba6;
+  background-color: #fffdf6;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  color: #2f2a23;
+  transition: border-color 0.2s ease;
+}
+
+.note-editor textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.note-editor input:focus,
+.note-editor textarea:focus {
+  outline: 2px solid #d3c2a1;
+  outline-offset: 2px;
+  border-color: #d3c2a1;
+}
+
+.note-editor-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.note-save {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background-color: #3b342b;
+  color: #f9f6f0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.note-save:hover {
+  background-color: #4a4238;
+}
+
+.note-cancel {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #cfc4b2;
+  background-color: #fffaf1;
+  color: #4b433a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.note-cancel:hover {
+  background-color: #f3eadb;
+  border-color: #c5b8a3;
+}
+
+.notes-section {
+  display: grid;
+  gap: 16px;
+}
+
+.notes-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.notes-section-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.notes-count {
+  color: #6a6158;
+  font-size: 0.9rem;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.note-card {
+  background-color: #fffdf8;
+  border: 1px solid #e3ddd3;
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  box-shadow: 0 10px 18px rgba(33, 27, 20, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 26px rgba(33, 27, 20, 0.12);
+}
+
+.note-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.note-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #2e2923;
+}
+
+.note-actions {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.icon-button {
+  border: 1px solid #d7d0c6;
+  background-color: #fffdf8;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #5f564d;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.icon-button svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-button:hover {
+  background-color: #f1ece4;
+  border-color: #cfc6b8;
+}
+
+.icon-button.danger {
+  color: #8a5a4a;
+}
+
+.note-preview {
+  margin: 0;
+  color: #5e554b;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.note-meta {
+  font-size: 0.8rem;
+  color: #857c72;
+}
+
+.empty-state {
+  border: 1px dashed #d8d1c7;
+  background-color: #fffdf8;
+  border-radius: 18px;
+  padding: 32px;
+  text-align: center;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.empty-illustration {
+  width: 120px;
+  height: 90px;
+  background-color: #f1ece4;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #8a7e72;
+}
+
+.empty-illustration svg {
+  width: 90px;
+  height: 70px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.empty-state h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #6f665c;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 720px) {
+  .dashboard-navbar {
+    padding: 0 16px;
+    height: 72px;
+  }
+
+  .dashboard-content {
+    padding: 104px 16px 40px;
+  }
+
+  .dashboard-actions {
+    align-items: flex-start;
+  }
+}

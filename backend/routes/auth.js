@@ -2,10 +2,13 @@ import { Router } from "express";
 import pool from "../db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = Router();
 const saltRounds = 10;
-const secret = "mysecretkey"
+const secret = process.env.JWT_SECRET
 
 router.post("/register", async (req, res) => {
 

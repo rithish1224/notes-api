@@ -2,11 +2,14 @@ import express from "express"
 import notesRouter from "./routes/notes.js"
 import authRouter from "./routes/auth.js"
 import pool from "./db.js";
+import cors from "cors"
 
 const app = express();
 const port = 3000;
 
 app.use(express.json())
+
+app.use(cors());
 
 pool.query("SELECT NOW()", (err, result) => {
 
