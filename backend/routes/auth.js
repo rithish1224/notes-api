@@ -8,7 +8,7 @@ dotenv.config();
 
 const router = Router();
 const saltRounds = 10;
-const secret = process.env.JWT_SECRET
+const secret = process.env.JWT_SECRETs
 
 router.post("/register", async (req, res) => {
 
