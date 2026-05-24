@@ -63,7 +63,7 @@ router.post("/login", async (req,res) => {
         );
 
         if(checkuser.rows.length === 0){
-            return res.status(409).json({
+            return res.status(404).json({
                 message: "user doesnt exist"
             });
         }
@@ -86,7 +86,7 @@ router.post("/login", async (req,res) => {
             })
         }
         else{
-            return res.status(404).json({
+            return res.status(401).json({
                 message:"wrong password"
             })
         }

@@ -11,6 +11,8 @@ const Dashboard = () => {
   const [noteContent, setNoteContent] = useState('')
   const [notes, setNotes] = useState([])
   const [editingId, setEditingId] = useState(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [deletingId, setDeletingId] = useState(null)
 
   const navigate = useNavigate()
 
@@ -62,8 +64,12 @@ const Dashboard = () => {
 
   // SAVE NOTE
   const saveNote = async () => {
+    if (isSaving) {
+      return
+    }
 
     try {
+      setIsSaving(true)
 
       // CREATE NOTE
       if (!editingId) {
@@ -99,6 +105,9 @@ const Dashboard = () => {
 
       console.error(err)
 
+    }
+    finally {
+      setIsSaving(false)
     }
   }
 
@@ -144,7 +153,13 @@ const Dashboard = () => {
   // DELETE NOTE
   const handleDeleteNote = async (noteId) => {
 
+    if (deletingId === noteId) {
+      return
+    }
+
     try {
+
+      setDeletingId(noteId)
 
       await axios.delete(
         `https://notes-api-4ked.onrender.com/notes/${noteId}`,
@@ -160,6 +175,9 @@ const Dashboard = () => {
 
       console.error(err)
 
+    }
+    finally {
+      setDeletingId(null)
     }
   }
 
@@ -261,10 +279,13 @@ const Dashboard = () => {
             <div className="note-editor-actions">
 
               <button
-                className="note-save"
+                className={`note-save${isSaving ? ' is-loading' : ''}`}
                 type="submit"
+                disabled={isSaving}
+                aria-busy={isSaving}
               >
-                Save
+                {isSaving && <span className="note-save-spinner" aria-hidden="true" />}
+                <span className="note-save__text">{isSaving ? 'Saving...' : 'Save'}</span>
               </button>
 
               <button
@@ -371,12 +392,15 @@ const Dashboard = () => {
 
             <div className="notes-grid">
 
-              {notes.map((note) => (
+              {notes.map((note) => {
+                const isEditingNote = isSaving && editingId === note.id
+                const isDeletingNote = deletingId === note.id
 
-                <article
-                  className="note-card"
-                  key={note.id}
-                >
+                return (
+                  <article
+                    className="note-card"
+                    key={note.id}
+                  >
 
                   <div className="note-card-header">
 
@@ -388,43 +412,55 @@ const Dashboard = () => {
 
                       <button
                         type="button"
-                        className="icon-button"
+                        className={`icon-button${isEditingNote ? ' is-loading' : ''}`}
                         aria-label="Edit note"
                         onClick={() => handleEditNote(note)}
+                        disabled={isEditingNote || isDeletingNote}
+                        aria-busy={isEditingNote}
                       >
 
-                        <svg
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                        >
+                        {isEditingNote ? (
+                          <span className="icon-spinner" aria-hidden="true" />
+                        ) : (
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
 
-                          <path d="M4 16.5V20h3.5L18 9.5l-3.5-3.5L4 16.5Z" />
+                            <path d="M4 16.5V20h3.5L18 9.5l-3.5-3.5L4 16.5Z" />
 
-                          <path d="M13.5 6l3.5 3.5" />
+                            <path d="M13.5 6l3.5 3.5" />
 
-                        </svg>
+                          </svg>
+                        )}
 
                       </button>
 
                       <button
                         type="button"
-                        className="icon-button danger"
+                        className={`icon-button danger${isDeletingNote ? ' is-loading' : ''}`}
                         aria-label="Delete note"
                         onClick={() => handleDeleteNote(note.id)}
+                        disabled={isDeletingNote}
+                        aria-busy={isDeletingNote}
                       >
 
-                        <svg
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                        >
+                        {isDeletingNote ? (
+                          <span className="icon-spinner" aria-hidden="true" />
+                        ) : (
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
 
-                          <path d="M4 7h16" />
+                            <path d="M4 7h16" />
 
-                          <path d="M9 7V5h6v2" />
+                            <path d="M9 7V5h6v2" />
 
-                          <path d="M7 7l1 12h8l1-12" />
+                            <path d="M7 7l1 12h8l1-12" />
 
-                        </svg>
+                          </svg>
+                        )}
 
                       </button>
 
@@ -440,9 +476,9 @@ const Dashboard = () => {
                     {note.createdAt}
                   </div>
 
-                </article>
-
-              ))}
+                  </article>
+                )
+              })}
 
             </div>
 

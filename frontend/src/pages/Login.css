@@ -146,6 +146,10 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .login-button:hover {
@@ -155,6 +159,40 @@
 .login-button:focus-visible {
   outline: 2px solid #cdbfa9;
   outline-offset: 2px;
+}
+
+.login-button.is-loading {
+  opacity: 0.85;
+  cursor: progress;
+}
+
+.login-button:disabled {
+  cursor: not-allowed;
+}
+
+.login-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(249, 246, 240, 0.35);
+  border-top-color: #f9f6f0;
+  animation: login-spin 0.9s linear infinite;
+}
+
+.login-button__text {
+  line-height: 1;
+}
+
+@keyframes login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-spinner {
+    animation: none;
+  }
 }
 
 .login-footer {
@@ -171,4 +209,61 @@
 
 .login-register:hover {
   text-decoration: underline;
+}
+
+.login-error {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 40;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(360px, calc(100% - 32px));
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #f1bcbc;
+  background-color: #fff1f1;
+  color: #b23a2f;
+  box-shadow: 0 8px 18px rgba(50, 20, 20, 0.12);
+}
+
+.login-error__content {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.login-error__message {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.login-error__close {
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.login-error__close:hover {
+  color: #8f2c24;
+}
+
+.login-error__close:focus-visible {
+  outline: 2px solid #d98c8c;
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .login-error {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
 }
