@@ -1,15 +1,13 @@
-import pg from "pg";
 import { Pool } from "pg";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
 const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "notes_api",
-    password: process.env.DB_PASS,
-    port: 5432
+   connectionString: process.env.DB_URL,
+   ssl:{
+      rejectUnauthorized:false
+   }
 });
 
 export default pool;
