@@ -1,17 +1,18 @@
 import { Router } from "express";
 import pool from "../db.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/:user_id",async (req, res) => {
-    const user_id = req.params.user_id
+router.get("/",authMiddleware,async (req, res) => {
+    const user_id = req.user.id
     const note = await pool.query("SELECT * FROM notes where user_id = $1;",[user_id])
     res.json(note.rows)
 });
 
-router.post("/",async (req,res) => {
+router.post("/",authMiddleware,async (req,res) => {
     
-    const user_id = req.body.user_id;
+    const user_id = req.user.id;
     const title = req.body.title;
     const content = req.body.content;
 
@@ -24,10 +25,11 @@ router.post("/",async (req,res) => {
 });
 })
 
-router.get("/search",async (req,res) => {
-    const title = req.query.title
+router.get("/search",authMiddleware,async (req,res) => {
+    const title = req.query.title;
+    const user_id = req.user.id;
 
-    const result = await pool.query("SELECT * FROM notes WHERE title LIKE $1",[`%${title}%`])
+    const result = await pool.query("SELECT * FROM notes WHERE title LIKE $1 AND user_id=$2",[`%${title}%`,user_id])
     if(result.rows.length === 0){
         return res.status(404).json(
             {
@@ -39,10 +41,11 @@ router.get("/search",async (req,res) => {
     res.json(result.rows)
 })
 
-router.get("/:id",async (req,res) => {
+router.get("/:id",authMiddleware,async (req,res) => {
     const id = Number(req.params.id);
+    const user_id = req.user.id
     
-    const result = await pool.query("SELECT * FROM notes WHERE id = $1",[id]);
+    const result = await pool.query("SELECT * FROM notes WHERE id = $1 AND user_id=$2",[id,user_id]);
 
     if(result.rows.length === 0){
         return res.status(404).json({
@@ -53,12 +56,13 @@ router.get("/:id",async (req,res) => {
     res.json(result.rows[0])
 })
 
-router.put("/:id",async (req,res) => {
-    const id = Number(req.params.id);
+router.put("/:id",authMiddleware,async (req,res) => {
+    const id = Number(req.params.id);;
+    const user_id = req.user.id;
     const title = req.body.title;
     const content = req.body.content;
     
-    const result = await pool.query("UPDATE notes SET title=$1,content=$2 WHERE id=$3 RETURNING * ",[title,content,id]);
+    const result = await pool.query("UPDATE notes SET title=$1,content=$2 WHERE id=$3 AND user_id=$4 RETURNING * ",[title,content,id,user_id]);
 
     if (result.rows.length === 0) {
         return res.status(404).json({
@@ -73,10 +77,11 @@ router.put("/:id",async (req,res) => {
 
 })
 
-router.delete("/:id",async (req,res) => {
+router.delete("/:id",authMiddleware,async (req,res) => {
     const id = Number(req.params.id);
+    const user_id = req.user.id;
     
-    const result = await pool.query("DELETE FROM notes WHERE id = $1 RETURNING *",[id])
+    const result = await pool.query("DELETE FROM notes WHERE id = $1 AND user_id = $2 RETURNING *",[id,user_id])
 
     console.log(result.rows);
 

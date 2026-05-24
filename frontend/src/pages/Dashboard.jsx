@@ -31,9 +31,10 @@ const Dashboard = () => {
 
     try {
 
-      const history = await axios.get(
-        `http://localhost:3000/notes/${user_id}`
-      )
+      const history = await axios.get("http://localhost:3000/notes",{
+        headers:{
+          Authorization: `Bearer ${token}`
+      }})
 
       setNotes(history.data)
 
@@ -68,8 +69,11 @@ const Dashboard = () => {
       if (!editingId) {
 
         await axios.post(
-          "http://localhost:3000/notes",
-          data
+          "http://localhost:3000/notes",data,
+          {
+        headers:{
+          Authorization: `Bearer ${token}`
+      }}
         )
 
       }
@@ -79,7 +83,10 @@ const Dashboard = () => {
 
         await axios.put(
           `http://localhost:3000/notes/${editingId}`,
-          data
+           data,{
+        headers:{
+          Authorization: `Bearer ${token}`
+      }}
         )
 
       }
@@ -140,7 +147,11 @@ const Dashboard = () => {
     try {
 
       await axios.delete(
-        `http://localhost:3000/notes/${noteId}`
+        `http://localhost:3000/notes/${noteId}`,
+        {
+        headers:{
+          Authorization: `Bearer ${token}`
+      }}
       )
 
       await getNotes()
