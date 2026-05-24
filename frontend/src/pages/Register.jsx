@@ -20,7 +20,7 @@ const Register = () => {
     e.preventDefault()
 
     try{
-      const response = await axios.post("http://localhost:3000/auth/register",data)
+      const response = await axios.post("https://notes-api-4ked.onrender.com/register",data)
       console.log(response.data)
       navigate('/')
     }catch(error){

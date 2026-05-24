@@ -31,7 +31,7 @@ const Dashboard = () => {
 
     try {
 
-      const history = await axios.get("http://localhost:3000/notes",{
+      const history = await axios.get("https://notes-api-4ked.onrender.com/notes",{
         headers:{
           Authorization: `Bearer ${token}`
       }})
@@ -69,7 +69,7 @@ const Dashboard = () => {
       if (!editingId) {
 
         await axios.post(
-          "http://localhost:3000/notes",data,
+          "https://notes-api-4ked.onrender.com/notes",data,
           {
         headers:{
           Authorization: `Bearer ${token}`
@@ -82,7 +82,7 @@ const Dashboard = () => {
       else {
 
         await axios.put(
-          `http://localhost:3000/notes/${editingId}`,
+          `https://notes-api-4ked.onrender.com/notes/${editingId}`,
            data,{
         headers:{
           Authorization: `Bearer ${token}`
@@ -147,7 +147,7 @@ const Dashboard = () => {
     try {
 
       await axios.delete(
-        `http://localhost:3000/notes/${noteId}`,
+        `https://notes-api-4ked.onrender.com/notes/${noteId}`,
         {
         headers:{
           Authorization: `Bearer ${token}`

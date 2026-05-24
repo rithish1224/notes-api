@@ -17,7 +17,7 @@ const Login = () => {
   async function submitHandler(e){
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", data)
+      const response = await axios.post("https://notes-api-4ked.onrender.com/auth/login", data)
       console.log(response.data)
       localStorage.setItem("token", response.data.token)
       navigate('/dashboard')
