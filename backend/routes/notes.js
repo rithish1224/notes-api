@@ -8,6 +8,7 @@ router.get("/",authMiddleware,async (req, res) => {
     const user_id = req.user.id
     const note = await pool.query("SELECT * FROM notes where user_id = $1;",[user_id])
     res.json(note.rows)
+    console.log(req.user)
 });
 
 router.post("/",authMiddleware,async (req,res) => {

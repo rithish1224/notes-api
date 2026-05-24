@@ -57,7 +57,7 @@ const Dashboard = () => {
     e.preventDefault()
 
     localStorage.removeItem("token")
-
+    setNotes([])
     navigate('/')
 
   }
