@@ -1,14 +1,37 @@
 import { Router } from "express";
 import pool from "../db.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import redis from "../config/redis.js";
 
 const router = Router();
 
 router.get("/",authMiddleware,async (req, res) => {
     const user_id = req.user.id
-    const note = await pool.query("SELECT * FROM notes where user_id = $1;",[user_id])
-    res.json(note.rows)
-    console.log(req.user)
+    const cache_key = `notes:${user_id}`
+
+    try{
+        const cached_notes = await redis.get(cache_key);
+
+        if(cached_notes){
+            console.log("Cache hit")
+            return res.json(JSON.parse(cached_notes));
+        }
+
+        console.log("cache miss")
+
+        const note = await pool.query("SELECT * FROM notes where user_id = $1;",[user_id])
+        
+        await redis.set(cache_key , JSON.stringify(note.rows), {
+            EX: 300
+        })
+        res.json(note.rows);
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            message: "Something went wrong"
+        });
+    }
+    
 });
 
 router.post("/",authMiddleware,async (req,res) => {
@@ -19,6 +42,8 @@ router.post("/",authMiddleware,async (req,res) => {
 
 
     const result = await pool.query("INSERT INTO notes(title,content,user_id) VALUES ($1,$2,$3) RETURNING *",  [title, content, user_id]) 
+
+    await redis.del(`notes:${user_id}`);
 
     res.status(201).json({
     message: "Note created successfully",
@@ -65,6 +90,8 @@ router.put("/:id",authMiddleware,async (req,res) => {
     
     const result = await pool.query("UPDATE notes SET title=$1,content=$2 WHERE id=$3 AND user_id=$4 RETURNING * ",[title,content,id,user_id]);
 
+    await redis.del(`notes:${user_id}`);
+
     if (result.rows.length === 0) {
         return res.status(404).json({
             message: "Note not found"
@@ -83,6 +110,8 @@ router.delete("/:id",authMiddleware,async (req,res) => {
     const user_id = req.user.id;
     
     const result = await pool.query("DELETE FROM notes WHERE id = $1 AND user_id = $2 RETURNING *",[id,user_id])
+
+    await redis.del(`notes:${user_id}`);
 
     console.log(result.rows);
 
