@@ -3,15 +3,23 @@ import notesRouter from "./routes/notes.js"
 import authRouter from "./routes/auth.js"
 import pool from "./db.js";
 import cors from "cors"
+import redis from "./config/redis.js";
+import testRouter from "./routes/test.js"
 
 const app = express();
 const port = 3000;
 
 app.use(express.json())
 
-app.use(cors());
+try{
+    await redis.connect();
+    console.log("Connected to redis")
+}catch(err){
+    console.log(err)
+}
 
-pool.query("SELECT NOW()", (err, result) => {
+try{
+    await pool.query("SELECT NOW()", (err, result) => {
 
     if (err) {
         console.log(err);
@@ -19,10 +27,15 @@ pool.query("SELECT NOW()", (err, result) => {
         console.log(result.rows);
     }
 
+    console.log("Postgres Connected")
 });
+}catch(err){
+    console.error(err)
+}
 
 app.use("/notes",notesRouter);
 app.use("/auth",authRouter);
+app.use("/test",testRouter)
 
 app.get("/",(req,res) => {
     res.send("Hello World!!")
